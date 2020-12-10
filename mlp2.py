@@ -1,5 +1,5 @@
 import re
-from numpy import exp, array, random, dot, argmax, argmin, insert, delete
+from numpy import exp, array, random, dot, argmax, argmin, insert, delete, sqrt
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
@@ -25,6 +25,7 @@ class NeuralNetwork():
         self.save_layers_weights = {}   # by mse
         self.number_of_jumps = 0
         self.replace_bad_sample = 0
+        self.bias_input = -50   # add bias to input #abc0
         
 
     # The Sigmoid function, which describes an S shaped curve.
@@ -45,7 +46,7 @@ class NeuralNetwork():
     # We train the neural network through a process of trial and error.
     # Adjusting the synaptic weights each time.
     def train(self, training_set_inputs, training_set_outputs, number_of_training_iterations):
-        training_set_inputs_bias = insert(training_set_inputs, 0, -50, axis=1) # add bias to input #abc0        
+        training_set_inputs_bias = insert(training_set_inputs, 0, self.bias_input, axis=1) # add bias to input #abc0        
         for iteration in range(number_of_training_iterations):
             # Pass the training set through our neural network
             output_from_layer_2, output_from_layer_2_bias , output_from_layer_1 = self.think(training_set_inputs_bias)            
@@ -189,41 +190,81 @@ if __name__ == "__main__":
     print(" - Final weights:")
     neural_network.print_weights()    
 
-    # Output MSEs to file
-    # filename = './output.txt'
-    # with open(filename, 'w') as file_object:
-    #     for temp in neural_network.mse:
-    #         file_object.write(f'{str(temp)} ')
-    # print(min(neural_network.mse))    
-    
     # Test the neural network with holdout set.        
-    print(f'Stage 3) Test a new situation from holdoutset:')
-    count_test = 0
-    true_result = 0    
-    
-    for key, value in holdout_set.items():                    
-        count_test +=1
+    print(f'2. Test on holdout set:')
+    true_all = 0        
+    true_positive = [0,0,0,0,0,0,0,0]
+    true_negative = [0,0,0,0,0,0,0,0]
+    false_positive = [0,0,0,0,0,0,0,0]
+    false_negative = [0,0,0,0,0,0,0,0]
+    for key, value in holdout_set.items():
         test_case = value['input'] 
-        test_case.insert(0,1)    
+        test_case.insert(0,neural_network.bias_input)    
         makeup_test_case = []
         makeup_test_case.append(test_case)
         hidden_state, hidden_state_bias, output = neural_network.think(array(makeup_test_case))
-        if (value['output_real'] == argmax(output)):
-            true_result += 1
-    print(f'Accuracy of holdout set: {true_result/count_test}')
-    
+        if (argmax(output) == value['output_real']):
+            true_all += 1
+            for i in range(0,8):
+                if i == value['output_real']:
+                    true_positive[i] +=1
+                else:
+                    true_negative[i] += 1
+        else:
+            for i in range(0,8):
+                if i == value['output_real']:
+                    false_positive[i] +=1
+                elif i == argmax(output):
+                    false_negative[i] += 1 
+                else:
+                    true_negative[i] += 1            
+    print(f'Total vectors: {true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i]}')
+    for i in range(0,8):        
+        print(f'Class {i+1} (value {i}):')
+        print(f'    Accuracy = {(true_positive[i] + true_negative[i])/(true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i])}')
+        print(f'    Error = {(false_positive[i] + false_negative[i])/(true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i])}')        
+        print(f'    Precision = {(true_positive[i])/(true_positive[i] + false_positive[i])}')
+        print(f'    Recall = TPR = Sensitivity = {((true_positive[i])/(true_positive[i] + false_negative[i])) if (true_positive[i] + false_negative[i]) != 0 else 0}')
+        print(f'    FPR = {(false_positive[i])/(true_negative[i] + false_positive[i])}')
+        print(f'    Specificity = {(true_negative[i])/(true_negative[i] + false_positive[i])}')            
 
-    count_test = 0
-    true_result = 0
+    
+    # Test the neural network with validation set.   
+    print(f'3. Test on validation set:')          
+    true_all = 0        
+    true_positive = [0,0,0,0,0,0,0,0]
+    true_negative = [0,0,0,0,0,0,0,0]
+    false_positive = [0,0,0,0,0,0,0,0]
+    false_negative = [0,0,0,0,0,0,0,0]
     validation_set = get_file_input('validation_set.txt')   # get data from validation_set file
-    for key, value in validation_set.items():                            
-        count_test +=1
+    for key, value in validation_set.items():       
         test_case = value['input'] 
-        test_case.insert(0,1)    
+        test_case.insert(0,neural_network.bias_input)    
         makeup_test_case = []
         makeup_test_case.append(test_case)
         hidden_state, hidden_state_bias, output = neural_network.think(array(makeup_test_case))
-        if (value['output_real'] == argmax(output)):
-            true_result += 1        
-    print(f'Accuracy of Validation set: {true_result/count_test}')
+        if (argmax(output) == value['output_real']):
+            true_all += 1
+            for i in range(0,8):
+                if i == value['output_real']:
+                    true_positive[i] +=1
+                else:
+                    true_negative[i] += 1
+        else:
+            for i in range(0,8):
+                if i == value['output_real']:
+                    false_positive[i] +=1
+                elif i == argmax(output):
+                    false_negative[i] += 1 
+                else:
+                    true_negative[i] += 1            
+    print(f'Total vectors: {true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i]}')
+    for i in range(0,8):        
+        print(f'Class {i+1} (value {i}):')
+        print(f'    Accuracy = {(true_positive[i] + true_negative[i])/(true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i])}')
+        print(f'    Error = {(false_positive[i] + false_negative[i])/(true_positive[i] + true_negative[i] + false_positive[i] + false_negative[i])}')        
+        print(f'    Precision = {(true_positive[i])/(true_positive[i] + false_positive[i])}')
+        print(f'    Recall = TPR = Sensitivity = {((true_positive[i])/(true_positive[i] + false_negative[i])) if (true_positive[i] + false_negative[i]) != 0 else 0}')
+        print(f'    FPR = {(false_positive[i])/(true_negative[i] + false_positive[i])}')
+        print(f'    Specificity = {(true_negative[i])/(true_negative[i] + false_positive[i])}')          
     
