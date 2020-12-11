@@ -7,7 +7,7 @@ Team: SUPER_CUTE
   4. Kiet Dang (kdang53@csu.fullerton.edu)
 
 Intro:
-  1. This project is to build a Multi-Layer Perceptron (MLP) feed-forward network style of artificial neural network classifier, with Back-Propagation plus Gradient Descent induction learning. The project will include a Classified Set of feature vectors with 8 possible classes. The Training Set will be about 60 percentage of these vectors. A single MLP will be constructed with one hidden layer including 13 nodes (one for bias) and one multi-class output layer including 8 noces. It also has 10 inputs plus one for bias. Python is used to implement the project – there is no visualization component to this project.
+  1. This project is to build a Multi-Layer Perceptron (MLP) feed-forward network style of artificial neural network classifier, with Back-Propagation plus Gradient Descent induction learning. The project will include a Classified Set of feature vectors with 8 possible classes. The Training Set will be about 60 percentage of these vectors. A single MLP will be constructed with one hidden layer including 13 nodes (one for bias) and one multi-class output layer including 8 nodes. It also has 10 inputs plus one for bias. Python is used to implement the project – there is no visualization component to this project.
   2. The MLP architecture:
 	- Two matrices [11x12] and [13x8] for saving weights, each weigh is set to a random number. The bias input for hidden layer is set to -50, and the bias input for output layer is set to 1.5
 	- Logistic fucntion is used for calculatinig the gradient
