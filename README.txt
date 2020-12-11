@@ -40,7 +40,7 @@ Feature:
   - Decrease this value may help the program run faster, but the result may be worse because MLP is not trained enough.
   
 Bugs:
-  - It has "RuntimeWarning: overflow encountered in exp" because we used float 64 for saving weights which can't handle a number as large as exp(-1300). However, it is rounded to zero and doesn't cause any problem. To prevent this unneccessary warning, we use one line code to ignore it (line #4), and this line can be deleted.
+  - It has "RuntimeWarning: overflow encountered in exp" because we used float 64 for saving weights which can't handle a number as small as exp(-1300). However, it is rounded to zero and doesn't cause any problem. To prevent this unneccessary warning, we use one line code to ignore it (line #4), and this line can be deleted.
  
 References:
 - Lecture files week 10, 11, 12,... which Professor Siska provided. They are used as the basic concepts of this project.
