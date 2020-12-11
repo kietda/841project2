@@ -16,7 +16,7 @@ Intro:
 	- Escape local minima by take a random jump
 
 Contents: Files Included:
-  0-README.txt -- This file.
+  README.txt -- This file.
   mlp.py -- The main python file for initiazling, training, and outputing
   classified_set.txt -- Input file copied from the .pdf file professor provided
   validation_set.txt -- Input file copied from the .pdf file professor provided
