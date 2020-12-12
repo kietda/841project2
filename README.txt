@@ -1,11 +1,3 @@
-Class: 481-04
-Project 2 – Multi-Layer Perceptron (MLP)
-Team: SUPER_CUTE
-  1. Emily Pham (tpham523@csu.fullerton.edu)
-  2. Tai Nguyen (tainguyen@csu.fullerton.edu)
-  3. Gangju Li (ligangju@csu.fullerton.edu)
-  4. Kiet Dang (kdang53@csu.fullerton.edu)
-
 Intro:
   1. This project is to build a Multi-Layer Perceptron (MLP) feed-forward network style of artificial neural network classifier, with Back-Propagation plus Gradient Descent induction learning. The project will include a Classified Set of feature vectors with 8 possible classes. The Training Set will be about 60 percentage of these vectors. A single MLP will be constructed with one hidden layer including 13 nodes (one for bias) and one multi-class output layer including 8 nodes. It also has 10 inputs plus one for bias. Python is used to implement the project – there is no visualization component to this project.
   2. The MLP architecture:
